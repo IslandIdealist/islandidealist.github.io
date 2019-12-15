@@ -1,3 +1,5 @@
+//NODE COMMAND: static-server -p 8001
+
 var app;
 var mymap;
 var auth_data = {};
@@ -20,21 +22,210 @@ var neighborhoods = [
 	{"hood": "Macalester-Groveland", "lat": 44.934347, "lon": -93.173582, "crimes": 0},
 	{"hood": "Highland Park", "lat": 44.912641, "lon": -93.177235, "crimes": 0},
 	{"hood": "Summit Hill", "lat": 44.939679, "lon": -93.136448, "crimes": 0},
-	{"hood": "Summit Hill", "lat": 44.948767, "lon": -93.092090, "crimes": 0}
-	//{"hood": "Downtown", "lat": 44.951651, "lon": -93.090852},
+	{"hood": "Capitol River", "lat": 44.948767, "lon": -93.092090, "crimes": 0}
 ];
 
+neighbor_num = [
+"Conway/Battle Creek/Highwood",
+"Greater Eastside",
+"Westside",
+"Daytons Bluff",
+"Payne-Phalen",
+"North End",
+"Frogtown",
+"Summit-University",
+"West Seventh",
+"Como",
+"Midway",
+"St. Anthony",
+"Union Park", 
+"Macalester-Groveland",
+"Highland Park",
+"Summit Hill",
+]
 
-
-
-
-
-
-
-
-
-
-//NODE COMMAND: static-server -p 8001
+var color_list = {
+  "110": "background-color:red; color: white;", ////////
+  "120": "background-color:red; color: white;", ////////
+  "210": "background-color:red; color: white;", ////////
+  "220": "background-color:red; color: white;", ////////
+  "300": "background-color:purple; color:white;",
+  "311": "background-color:purple; color:white;",
+  "312": "background-color:purple; color:white;",
+  "313": "background-color:purple; color:white;",
+  "314": "background-color:purple; color:white;",
+  "321": "background-color:purple; color:white;",
+  "322": "background-color:purple; color:white;",
+  "323": "background-color:purple; color:white;",
+  "324": "background-color:purple; color:white;",
+  "331": "background-color:purple; color:white;",
+  "333": "background-color:purple; color:white;",
+  "334": "background-color:purple; color:white;",
+  "341": "background-color:purple; color:white;",
+  "342": "background-color:purple; color:white;",
+  "343": "background-color:purple; color:white;",
+  "344": "background-color:purple; color:white;",
+  "351": "background-color:purple; color:white;",
+  "352": "background-color:purple; color:white;",
+  "353": "background-color:purple; color:white;",
+  "354": "background-color:purple; color:white;",
+  "361": "background-color:purple; color:white;",
+  "363": "background-color:purple; color:white;",
+  "364": "background-color:purple; color:white;",
+  "371": "background-color:purple; color:white;",
+  "372": "background-color:purple; color:white;",
+  "373": "background-color:purple; color:white;",
+  "374": "background-color:purple; color:white;",
+  "400": "background-color:red; color: white;", ////////
+  "410": "background-color:red; color: white;", ////////
+  "411": "background-color:red; color: white;", ////////
+  "412": "background-color:red; color: white;", ////////
+  "420": "background-color:red; color: white;", ////////
+  "421": "background-color:red; color: white;", ////////
+  "422": "background-color:red; color: white;", ////////
+  "430": "background-color:red; color: white;", ////////
+  "431": "background-color:red; color: white;", ////////
+  "432": "background-color:red; color: white;", ////////
+  "440": "background-color:red; color: white;", ////////
+  "441": "background-color:red; color: white;", ////////
+  "442": "background-color:red; color: white;", ////////
+  "450": "background-color:red; color: white;", ////////
+  "451": "background-color:red; color: white;", ////////
+  "452": "background-color:red; color: white;", ////////
+  "453": "background-color:red; color: white;", ////////
+  "500": "background-color:purple; color:white;",
+  "510": "background-color:purple; color:white;",
+  "511": "background-color:purple; color:white;",
+  "513": "background-color:purple; color:white;",
+  "515": "background-color:purple; color:white;",
+  "516": "background-color:purple; color:white;",
+  "520": "background-color:purple; color:white;",
+  "521": "background-color:purple; color:white;",
+  "523": "background-color:purple; color:white;",
+  "525": "background-color:purple; color:white;",
+  "526": "background-color:purple; color:white;",
+  "530": "background-color:purple; color:white;",
+  "531": "background-color:purple; color:white;",
+  "533": "background-color:purple; color:white;",
+  "535": "background-color:purple; color:white;",
+  "536": "background-color:purple; color:white;",
+  "540": "background-color:purple; color:white;",
+  "541": "background-color:purple; color:white;",
+  "543": "background-color:purple; color:white;",
+  "545": "background-color:purple; color:white;",
+  "546": "background-color:purple; color:white;",
+  "550": "background-color:purple; color:white;",
+  "551": "background-color:purple; color:white;",
+  "553": "background-color:purple; color:white;",
+  "555": "background-color:purple; color:white;",
+  "556": "background-color:purple; color:white;",
+  "560": "background-color:purple; color:white;",
+  "561": "background-color:purple; color:white;",
+  "563": "background-color:purple; color:white;",
+  "565": "background-color:purple; color:white;",
+  "566": "background-color:purple; color:white;",
+  "600": "background-color:purple; color:white;",
+  "603": "background-color:purple; color:white;",
+  "611": "background-color:purple; color:white;",
+  "612": "background-color:purple; color:white;",
+  "613": "background-color:purple; color:white;",
+  "614": "background-color:purple; color:white;",
+  "621": "background-color:purple; color:white;",
+  "622": "background-color:purple; color:white;",
+  "623": "background-color:purple; color:white;",
+  "630": "background-color:purple; color:white;",
+  "631": "background-color:purple; color:white;",
+  "632": "background-color:purple; color:white;",
+  "633": "background-color:purple; color:white;",
+  "640": "background-color:purple; color:white;",
+  "641": "background-color:purple; color:white;",
+  "642": "background-color:purple; color:white;",
+  "643": "background-color:purple; color:white;",
+  "651": "background-color:purple; color:white;",
+  "652": "background-color:purple; color:white;",
+  "653": "background-color:purple; color:white;",
+  "661": "background-color:purple; color:white;",
+  "662": "background-color:purple; color:white;",
+  "663": "background-color:purple; color:white;",
+  "671": "background-color:purple; color:white;",
+  "672": "background-color:purple; color:white;",
+  "673": "background-color:purple; color:white;",
+  "681": "background-color:purple; color:white;",
+  "682": "background-color:purple; color:white;",
+  "683": "background-color:purple; color:white;",
+  "691": "background-color:purple; color:white;",
+  "692": "background-color:purple; color:white;",
+  "693": "background-color:purple; color:white;",
+  "700": "background-color:purple; color:white;",
+  "710": "background-color:purple; color:white;",
+  "711": "background-color:purple; color:white;",
+  "712": "background-color:purple; color:white;",
+  "720": "background-color:purple; color:white;",
+  "721": "background-color:purple; color:white;",
+  "722": "background-color:purple; color:white;",
+  "810": "background-color:red; color: white;", ////////
+  "861": "background-color:red; color: white;", ////////
+  "862": "background-color:red; color: white;", ////////
+  "863": "background-color:red; color: white;", ////////
+  "900": "background-color:purple; color:white;",
+  "901": "background-color:red; color: white;", ////////
+  "903": "background-color:purple; color:white;",
+  "905": "background-color:purple; color:white;",
+  "911": "background-color:red; color: white;", ////////
+  "913": "background-color:purple; color:white;",
+  "915": "background-color:purple; color:white;",
+  "921": "background-color:purple; color:white;",
+  "923": "background-color:purple; color:white;",
+  "931": "background-color:purple; color:white;",
+  "933": "background-color:purple; color:white;",
+  "941": "background-color:purple; color:white;",
+  "942": "background-color:purple; color:white;",
+  "951": "background-color:purple; color:white;",
+  "961": "background-color:purple; color:white;",
+  "971": "background-color:purple; color:white;",
+  "972": "background-color:purple; color:white;",
+  "981": "background-color:purple; color:white;",
+  "982": "background-color:purple; color:white;",
+  "1400": "background-color:purple; color:white;",
+  "1401": "background-color:purple; color:white;",
+  "1410": "background-color:purple; color:white;",
+  "1415": "background-color:purple; color:white;",
+  "1416": "background-color:purple; color:white;",
+  "1420": "background-color:purple; color:white;",
+  "1425": "background-color:purple; color:white;",
+  "1426": "background-color:purple; color:white;",
+  "1430": "background-color:purple; color:white;",
+  "1435": "background-color:purple; color:white;",
+  "1436": "background-color:purple; color:white;",
+  "1800": "background-color:blue; color:white;",
+  "1810": "background-color:blue; color:white;",
+  "1811": "background-color:blue; color:white;",
+  "1812": "background-color:blue; color:white;",
+  "1813": "background-color:blue; color:white;",
+  "1814": "background-color:blue; color:white;",
+  "1815": "background-color:blue; color:white;",
+  "1820": "background-color:blue; color:white;",
+  "1822": "background-color:blue; color:white;",
+  "1823": "background-color:blue; color:white;",
+  "1824": "background-color:blue; color:white;",
+  "1825": "background-color:blue; color:white;",
+  "1830": "background-color:blue; color:white;",
+  "1835": "background-color:blue; color:white;",
+  "1840": "background-color:blue; color:white;",
+  "1841": "background-color:blue; color:white;",
+  "1842": "background-color:blue; color:white;",
+  "1843": "background-color:blue; color:white;",
+  "1845": "background-color:blue; color:white;",
+  "1850": "background-color:blue; color:white;",
+  "1855": "background-color:blue; color:white;",
+  "1865": "background-color:blue; color:white;",
+  "1870": "background-color:blue; color:white;",
+  "1880": "background-color:blue; color:white;",
+  "1885": "background-color:blue; color:white;",
+  "2619": "background-color:red; color: white;", ////////
+  "9954": "background-color:blue; color:white;",
+  "9959": "background-color:blue; color:white;"
+};
 
 function Init(crime_api_url) {
 	getCrimeData();
@@ -43,13 +234,22 @@ function Init(crime_api_url) {
 	API_URL = crime_api_url;
 
     app = new Vue({
-        el: "#app",
-        data: {
-				rows: {},
-        location_search: "",
+			el: "#app",
+			data: {
+			rows: {},
+			location_search: "",
+			colors: color_list,
+			incident: {},
+			neighborhoods: neighborhoods,
 			map: mymap,
 			crime: 0,
 			rows: {},
+			hood_filter: [],
+			crime_filter: [],
+			start_date: '2019-10-01',
+			end_date: '2019-10-31',
+			start_time: '00:00:0000',
+			end_time:'24:59:9999',
 			still_loading: 1,
 			search_type: "address",
             search_type_options: [
@@ -79,25 +279,19 @@ function Init(crime_api_url) {
 
 }
 
-
-
-
-
-
-
-
 function Prompt() {
 		$(".dialog-form").dialog({
 				autoOpen: true,
 				modal: true,
 				width: "360px",
+				curr_incident: '',
 				buttons: {
 						"Ok": function() {
 								var prompt_input = $("#prompt_input");
 								Init(prompt_input.val());
 								$(this).dialog("close");
 								var div = document.getElementById("overlay");
-								div.style.color = "white";
+								div.style.fontColor = "white";
 								div.innerHTML = "Loading...";
 								div.style.position = "fixed";
 								div.style.textAlign = "center";
@@ -113,8 +307,7 @@ function Prompt() {
 		});
 }
 
-function LocationSearch(event)
-{
+function LocationSearch(event){
 	var input = app.location_search;
 
 	if( app.search_type == "address"){
@@ -155,7 +348,24 @@ function displayCoordinates(data){
 		});
 
 		mymap.setView([data[0].lat, data[0].lon], 16);
-		L.marker([data[0].lat, data[0].lon], {icon: redIcon}).bindTooltip(app.location_search, { permanent: false, direction: 'top'}).addTo(mymap);
+		var marker = L.marker([data[0].lat, data[0].lon], {icon: redIcon});
+		var tooltip = L.tooltip({
+			direction: 'top',
+			permanent: false,
+			interactive: true,
+			opacity: 0.9,
+		});
+		tooltip.setContent( app.incident.date +', '+app.incident.time +'\n '+app.incident.incident+' -Click to delete!');
+		tooltip.setLatLng(new L.LatLng(data[0].lat, data[0].lon));
+		tooltip.on('click', function(event) {
+			alert("Click!");
+		});
+		marker.on('click', ()=>{ map.removeLayer(marker);} );
+		marker.bindTooltip(tooltip).addTo(mymap);
+		
+		
+		//L.marker([data[0].lat, data[0].lon], {icon: redIcon}).bindTooltip(app.location_search, { permanent: false, direction: 'top'}).addTo(mymap);
+		//L.marker([data[0].lat, data[0].lon], {icon: redIcon}).bindTooltip(app.location_search, { permanent: false, direction: 'top'}).addTo(mymap);
 	}
 	else{
 		var greenIcon = new L.Icon({
@@ -176,7 +386,6 @@ function displayCoordinates(data){
 	app.crime = 0;
 }
 
-
 function getCrimeData(){
 
 	let request = {
@@ -195,7 +404,7 @@ function getCrimeData(){
 
 function createMap(){
 
-	mymap = L.map('map').setView([44.954179, -93.091797], 12);
+	mymap = L.map('map').setView([44.954179, -93.091797], 13);
 
 	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaXNsYW5kaWRlYWxpc3QiLCJhIjoiY2szdzVhMHhtMGVpMDNrcGVtM3I3dTR1NCJ9.TB0u05RvP7KUzTvyumY4XA', {
 		maxZoom: 18,
@@ -292,5 +501,43 @@ function createMap(){
 function clear(){
 	
 	document.getElementById("overlay").parentNode.removeChild(document.getElementById("overlay"));
+	
+}
+
+
+function filter(data){
+	
+	let request = {
+			url: 'http://cisc-dean.stthomas.edu:8002/incidents?format=json&start_date='+app.start_date+'&end_date=' + app.end_date,
+			headers: { "Accept": "application/json"},
+			//url: API_URL + '/incidents?format=json',//"https://cisc-dean.stthomas.edu:" + port,
+			dataType: "json",
+			success: function(data){
+				var result = {};
+				
+				for( var incident in data){
+					app.crime_filter.forEach( crime =>{
+						app.hood_filter.forEach( hood =>{
+							
+							if(data[incident].neighborhood_number == neighborhoods
+							
+							
+							
+						}		
+					}
+				}
+			},
+			error: ()=>{ alert('Could Not Get St.Paul Crime Data');}
+	};
+
+	$.ajax(request);
+	
+	
+	
+	
+	alert(app.hood_filter);
+	alert(app.crime_filter);
+	alert(app.start_date +' ' + app.end_date);
+	alert(app.start_time +' ' + app.end_time);
 	
 }
