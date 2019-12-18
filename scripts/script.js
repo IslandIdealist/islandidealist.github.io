@@ -559,3 +559,9 @@ function filter(data){
 
 	$.ajax(request);
 }
+
+function aboutPage(event){
+
+	document.location.href = __DIRNAME + "/AboutPage.html";
+
+}
