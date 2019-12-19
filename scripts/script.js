@@ -562,6 +562,7 @@ function filter(data){
 
 function aboutPage(event){
 
-	document.location.href = __DIRNAME + "/AboutPage.html";
+	document.location.href = path.join(__dirname, 'public', 'AboutPage.html');
+
 
 }
